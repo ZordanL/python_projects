@@ -22,20 +22,20 @@ df_profit_product = df_sales.groupby('Product').sum()
 df_profit_product = df_profit_product[['Profit']]
 df_profit_product = df_profit_product.sort_values(by='Profit', ascending=False)
 
-# Passo 4: Calculate the store that sold the most (profit)
+#step 4: Calculate the store that sold the most (profit)
 
 df_profit_store = df_sales.groupby('Store').sum()
 df_profit_store = df_profit_store[['Profit']]
 df_profit_store = df_profit_store.sort_values(by='Profit', ascending=False)
 
-# Passo 5: Calculate the average ticket per store
+#step 5: Calculate the average ticket per store
 
 df_sales['Average_ticket'] = df_sales['Unitary_value']
 df_ticket_store = df_sales.groupby('Store').mean(numeric_only=True)
 df_ticket_store = df_ticket_store[['Average_ticket']]
 df_ticket_store = df_ticket_store.sort_values(by='Average_ticket', ascending=False)
 
-# Passo 6: Create a dashboard of the store that sold the most (profit)
+#step 6: Create a dashboard of the store that sold the most (profit)
 
 graph = px.bar(df_profit_store, y='Profit', x=df_profit_store.index) #Due to the groupby function, the store column became index
 
@@ -98,7 +98,7 @@ msg['From'] = 'from_email@gmail.com'
 msg['To'] = 'to_email@gmail.com'
 password = 'your_password' #Password for the account that will send the email
 msg.add_header('Content-Type', 'text/html') #Content format
-msg.set_payload(corpo_email) #Message
+msg.set_payload(email_body) #Message
 
 #Server Settings - GMAIL
 s = smtplib.SMTP('smtp.gmail.com: 587') #Simple Mail Transfer Protocol
