@@ -44,69 +44,67 @@ graph = px.bar(df_profit_store, y='Profit', x=df_profit_store.index) #Due to the
 from babel.numbers import format_currency
 #Formatting must be done separately and after calculations, in separated cells, because they make the values become text
 
-#Faturamento por Store
-df_profit_store_formatted = pd.DataFrame(df_profit_store['Profit'].apply(lambda x: format_currency(x,'BRL',locale='pt_BR'))) #formatar moeda
-df_profit_store_formatted = df_profit_store_formatted.reset_index() #organizar cabeçalho, resetando index
-df_profit_store_formatted_html = df_profit_store_formatted.to_html(index=False,justify='center',border='0').replace('<tbody>', '<tbody style= "text-align: center; color: #484848; background: #F7F7F7">') #se torna uma estrutura html e não df pandas
+#Porfit per Store
+df_profit_store_formatted = pd.DataFrame(df_profit_store['Profit'].apply(lambda x: format_currency(x,'BRL',locale='pt_BR'))) #format currency
+df_profit_store_formatted = df_profit_store_formatted.reset_index() #organizing header by resetting index
+df_profit_store_formatted_html = df_profit_store_formatted.to_html(index=False,justify='center',border='0').replace('<tbody>', '<tbody style= "text-align: center; color: #484848; background: #F7F7F7">') #it becomes an html structure and not pandas df
 
-#Quantidade vendida por produto
-df_quantity_product_formatted = pd.DataFrame(df_quantity_product['Quantity'].apply(lambda x: '{:,.2f}'.format(x).replace(',','.'))) #formatar numero
+#Quantity sold per product
+df_quantity_product_formatted = pd.DataFrame(df_quantity_product['Quantity'].apply(lambda x: '{:,.2f}'.format(x).replace(',','.'))) #format number
 df_quantity_product_formatted = df_quantity_product_formatted.reset_index()
 df_quantity_product_formatted_html = df_quantity_product_formatted.to_html(index=False,justify='center',border='0').replace('<tbody>', '<tbody style= "text-align: center; color: #484848; background: #F7F7F7">')
 
-#Faturamento por produto
+#Profit per product
 df_profit_product_formatted = pd.DataFrame(df_profit_product['Profit'].apply(lambda x: format_currency(x,'BRL',locale='pt_BR')))
 df_profit_product_formatted = df_profit_product_formatted.reset_index()
 df_profit_product_formatted_html = df_profit_product_formatted.to_html(index=False,justify='center',border='0').replace('<tbody>', '<tbody style= "text-align: center; color: #484848; background: #F7F7F7">')
 
-#Ticket médio por Store
+#Average Ticket per Store
 df_ticket_store_formatted = pd.DataFrame(df_ticket_store['Average_ticket'].apply(lambda x: format_currency(x,'BRL',locale='pt_BR')))
 df_ticket_store_formatted = df_ticket_store_formatted.reset_index()
 df_ticket_store_formatted_html = df_ticket_store_formatted.to_html(index=False,justify='center',border='0').replace('<tbody>', '<tbody style= "text-align: center; color: #484848; background: #F7F7F7">')
 
-"""#ENVIAR EMAIL"""
+#SEND EMAIL
 
-# Passo 7: Enviar um email automático
-#Utilizando 3 aspas para guardar várias linhas dentro de uma varável
-#Utilizar o f para acrescentar variáveis no corpo do email
+# Step 7: Send an automatic email
+#Using 3 quotes to save multiple lines within a variable
+#Use f to add variables to the body of the email
 
+email_body = f"""
+<p>Hi, there! I hope this message finds you well</p>
 
-corpo_email = f"""
-<p>E aí pessoal, tudo bem?</p>
+<p>The sales indicator follows int the body of the email</p>
 
-<p>Seguem indicadores de venda</p>
-
-<p><b>Faturamento por Store</p></b>
+<p><b>Profit per Store</p></b>
 <p>{df_profit_store_formatted_html}</p>
 
-<p><b>Quantidade vendida por produto</b></p>
+<p><b>Quantity sold per product</b></p>
 <p>{df_quantity_product_formatted_html}</p>
 
-<p><b>Faturamento por produto</p>
+<p><b>Profit per product</p>
 <p>{df_profit_product_formatted_html} </b></p>
 
-<p><b>Ticket médio por Store</p></b>
+<p><b>Average Ticket per Store</p></b>
 <p>{df_ticket_store_formatted_html} </p>
 
-<p>Qualquer duvida estou à disposição</p>
-<p>Abs.,</p>
-<p>Lucas Zordan</p>
+<p>"Any questions, I'm at your disposal. Regards,"</p>
+<p>Signature</p>
 """
 
-#Configurações para envio
+#Settings for sending the email
 msg = em.Message()
-msg['Subject'] = "Relatório de vendas" #Assunto do email
-msg['From'] = 'your_email@gmail.com' #Email que vai disparar
-msg['To'] = 'yout_email@gmail.com'#Email que vai receber
-password = 'your_password' #Senha do email que vai enviar
-msg.add_header('Content-Type', 'text/html') #Formato do conteúdo
-msg.set_payload(corpo_email) #Mensagem
+msg['Subject'] = "Sales Report" #Subject
+msg['From'] = 'from_email@gmail.com'
+msg['To'] = 'to_email@gmail.com'
+password = 'your_password' #Password for the account that will send the email
+msg.add_header('Content-Type', 'text/html') #Content format
+msg.set_payload(corpo_email) #Message
 
-#Configurações do servidor - GMAIL
+#Server Settings - GMAIL
 s = smtplib.SMTP('smtp.gmail.com: 587') #Simple Mail Transfer Protocol
-s.starttls() #criotografia
+s.starttls() #cryotography
 
-#Credenciais do login
+#Login credentials
 s.login(msg['From'], password)
 s.sendmail(msg['From'], [msg['To']], msg.as_string().encode('utf-8'))
-print('Email enviado')
+print('Email sent')
